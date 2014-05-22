@@ -1,9 +1,5 @@
 <?php
-include_once(dirname(__FILE__).'/../../../../bootstrap.php');
-PapayaTestCase::registerPapayaAutoloader(
-  array(),
-  'modules/free/rss/_classmap.php'
-);
+require_once(dirname(__FILE__).'/bootstrap.php');
 
 class PapayaLibModulesFreeRssReaderPageTest extends PapayaTestCase {
 
