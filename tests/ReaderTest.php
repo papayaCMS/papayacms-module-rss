@@ -40,23 +40,23 @@ class PapayaLibModulesFreeRssReaderTest extends PapayaTestCase {
     $responseData = '<feed xmlns="http://www.w3.org/2005/Atom">';
     $responseData .= '<title>Test Feed</title>';
     $responseData .= '<logo>http://domain.tld/any_image.png</logo>';
-    $responseData .= '<updated>2010-05-10T00:00:00</updated>';
+    $responseData .= '<updated>2010-05-11T17:00:00+00:00</updated>';
     $responseData .= '<link href="http://domain.tld/" />';
     $responseData .= '<entry><id>1</id><title>Entry 1</title>';
     $responseData .= '<link rel="alternate" type="text/html" href="/link.php"/>';
-    $responseData .= '<published>2010-05-10T00:00:00</published><author><name>Author</name></author>';
+    $responseData .= '<published>2010-05-10T00:00:00+00:00</published><author><name>Author</name></author>';
     $responseData .= '<content>any content</content></entry>';
     $responseData .= '</feed>';
     $expected = array(
       'title' => 'Test Feed',
       'logo' => 'http://domain.tld/any_image.png',
-      'updated' => '2010-05-10 02:00:00',
+      'updated' => date('Y-m-d H:i:s', strtotime('2010-05-11T17:00:00+00:00')),
       'linkPrefix' => 'http://domain.tld/',
       'entries' => array(
         1 => array(
           'title' => 'Entry 1',
           'link' => 'http://domain.tld/link.php',
-          'published' => '2010-05-10 02:00:00',
+          'published' => date('Y-m-d H:i:s', strtotime('2010-05-10T00:00:00+00:00')),
           'author' => 'Author',
           'content' => 'any content'
         )
@@ -64,7 +64,7 @@ class PapayaLibModulesFreeRssReaderTest extends PapayaTestCase {
     );
     $baseObject->setHttpClient(new httpClientProxy(TRUE, 200, $responseData));
     $baseObject->setHtmlPurifierObject(new htmlPurifierProxy);
-    $this->assertSame($expected, $baseObject->parseFeed('any url'));
+    $this->assertEquals($expected, $baseObject->parseFeed('any url'));
   }
 
   /**
@@ -174,8 +174,8 @@ class PapayaLibModulesFreeRssReaderTest extends PapayaTestCase {
   */
   public function testTranslateDateTime() {
     $baseObject = $this->loadReaderObjectFixture();
-    $expected = '2010-05-11 18:00:00';
-    $result = $baseObject->translateDateTime('2010-05-11T17:00:00+01:00');
+    $expected = date('Y-m-d H:i:s', strtotime('2010-05-11T17:00:00+00:00'));
+    $result = $baseObject->translateDateTime('2010-05-11T17:00:00+00:00');
     $this->assertSame($expected, $result);
   }
 
